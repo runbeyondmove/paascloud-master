@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <!-- 本地Maven储存库地址，用来定义本地的Maven库的存储地址，即从Maven仓库中下载的文件的存储的位置 -->
+ <localRepository>D:\.work environment\mavne-repository</localRepository>
+  <interactiveMode>true</interactiveMode>
+  <offline>false</offline>
+  <pluginGroups>
+    <pluginGroup>org.mortbay.jetty</pluginGroup>
+    <pluginGroup>org.jenkins-ci.tools</pluginGroup>
+  </pluginGroups>
+
+  <!--配置权限,使用默认用户-->
+  <servers>
+    <server>
+      <id>my-lib-repo</id>
+      <username>paascloud_develop</username>
+      <password>https://github.com/paascloud</password>
+    </server>
+    <!--<server>
+      <id>my-lib-repo-3rdparty</id>
+      <username>paascloud_develop</username>
+      <password>https://github.com/paascloud</password>
+    </server>-->
+    <server>
+      <id>paascloud-lib-rep</id>
+      <username>paascloud_develop</username>
+      <password>https://github.com/paascloud</password>
+    </server>
+  </servers>
+
+  <mirrors>
+	<mirror>
+      <id>huaweicloud</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+    </mirror>
+	<mirror>
+      <id>my-lib-repo</id>
+      <mirrorOf>my-lib-repo</mirrorOf>
+      <name>private mirror</name>
+      <url>http://139.199.125.217:8081/content/repositories/releases/</url>
+    </mirror>
+    <!-- <mirror>
+      <id>my-lib-repo-3rdparty</id>
+      <mirrorOf>my-lib-repo-3rdparty</mirrorOf>
+      <name>private mirror</name>
+      <url>http://139.199.125.217:8081/content/repositories/thirdparty/</url>
+    </mirror> -->
+	<mirror>
+      <id>>paascloud-lib-rep</id>
+      <mirrorOf>paascloud-lib-rep</mirrorOf>
+      <name>private mirror</name>
+      <url>http://139.199.125.217:8081/content/repositories/paascloud-lib-rep/</url>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+      <id>liuzm</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <jdk>1.8</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+      </properties>
+      <repositories>
+        <!-- 私有库地址-->
+        <repository>
+          <id>my-lib-repo</id>
+          <url>http://139.199.125.217:8081/content/repositories/releases/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </repository>
+        <!-- <repository>
+          <id>my-lib-repo-3rdparty</id>
+          <url>http://139.199.125.217:8081/content/repositories/thirdparty/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </repository>-->
+		<repository>
+          <id>paascloud-lib-rep</id>
+          <url>http://139.199.125.217:8081/content/repositories/paascloud-lib-rep/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <!--插件库地址-->
+        <pluginRepository>
+          <id>my-lib-repo</id>
+          <url>http://139.199.125.217:8081/content/repositories/releases/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </pluginRepository>
+        <!-- <pluginRepository>
+          <id>my-lib-repo-3rdparty</id>
+          <url>http://139.199.125.217:8081/content/repositories/thirdparty/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </pluginRepository>-->
+      </pluginRepositories>
+
+    </profile>
+  </profiles>
+  <!-- 激活配置，指定哪些配置被激活 -->
+  <activeProfiles>
+    <activeProfile>liuzm</activeProfile>
+  </activeProfiles>
+</settings>
