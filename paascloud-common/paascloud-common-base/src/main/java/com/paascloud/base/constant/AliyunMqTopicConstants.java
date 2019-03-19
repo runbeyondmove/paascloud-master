@@ -245,6 +245,11 @@ public class AliyunMqTopicConstants {
 
 	}
 
+	/**
+	 * 格式：topicA@tagA||tagB||tagC,topicB@tagB||tagD
+	 * @param topicList
+	 * @return
+	 */
 	private static String buildOpcConsumerTopics(List<TopicObj> topicList) {
 
 		StringBuilder result = new StringBuilder();
@@ -254,7 +259,9 @@ public class AliyunMqTopicConstants {
 				String topic = topicObj.getTopic();
 				Set<String> tagList = topicObj.getTagList();
 
-				if (StringUtils.isEmpty(topic) || CollectionUtils.isEmpty(topicList)) {
+				// 写错了，应该是tagList
+				//if (StringUtils.isEmpty(topic) || CollectionUtils.isEmpty(topicList)) {
+				if (StringUtils.isEmpty(topic) || CollectionUtils.isEmpty(tagList)) {
 					continue;
 				}
 

@@ -51,6 +51,7 @@ public class IncrementIdGenerator implements IdGenerator {
 			return Long.valueOf(regCenter.getDirectly(GlobalConstant.ZK_REGISTRY_ID_ROOT_PATH + GlobalConstant.Symbol.SLASH + app + GlobalConstant.Symbol.SLASH + host));
 		} else {
 			// 节点不存在，那么需要生成id，利用zk节点的版本号每写一次就自增的机制来实现
+			// RetryNTimes(2000, 3) 重新次数，每次重试间隔时间
 			regCenter.increment(GlobalConstant.ZK_REGISTRY_SEQ, new RetryNTimes(2000, 3));
 			// 生成id
 			Integer id = regCenter.getAtomicValue(GlobalConstant.ZK_REGISTRY_SEQ, new RetryNTimes(2000, 3)).postValue();
