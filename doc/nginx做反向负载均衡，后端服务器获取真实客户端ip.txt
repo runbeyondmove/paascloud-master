@@ -1,0 +1,81 @@
+摘要: nginx做反向负载均衡，后端服务器获取真实客户端ip
+
+不知道有多少人遇到这个坑， 但愿能帮助一部分小伙伴拜托这个问题
+
+nginx增加header配置
+---------------------
+server {
+    listen       80;
+    server_name  admin.paascloud.net;
+    location ~ {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        ...
+    }
+}
+---------------------
+
+后端获取客户端ip代码
+---------------------
+public static String getRemoteAddr(HttpServletRequest request) {
+		String ipAddress = request.getHeader(GlobalConstant.X_Real_IP);
+		if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader(GlobalConstant.X_FORWARDED_FOR);
+			log.info("X_FORWARDED_FOR ip: ", ipAddress);
+		}
+		if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader(GlobalConstant.PROXY_CLIENT_IP);
+			log.info("PROXY_CLIENT_IP ip: ", ipAddress);
+		}
+		if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader(GlobalConstant.WL_PROXY_CLIENT_IP);
+			log.info("WL_PROXY_CLIENT_IP ip: ", ipAddress);
+		}
+		if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader(GlobalConstant.HTTP_CLIENT_IP);
+			log.info("HTTP_CLIENT_IP ip: ", ipAddress);
+		}
+		if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader(GlobalConstant.HTTP_X_FORWARDED_FOR);
+			log.info("HTTP_X_FORWARDED_FOR ip: ", ipAddress);
+		}
+		if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getRemoteAddr();
+			log.info("getRemoteAddr ip: ", ipAddress);
+		}
+		if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getRemoteAddr();
+			if (GlobalConstant.LOCALHOST_IP.equals(ipAddress) || GlobalConstant.LOCALHOST_IP_16.equals(ipAddress)) {
+				//根据网卡取本机配置的IP
+				InetAddress inet = null;
+				try {
+					inet = InetAddress.getLocalHost();
+				} catch (UnknownHostException e) {
+					logger.error("获取IP地址, 出现异常={}", e.getMessage(), e);
+				}
+				assert inet != null;
+				ipAddress = inet.getHostAddress();
+			}
+			log.info("获取IP地址 ipAddress={}", ipAddress);
+		}
+		// 对于通过多个代理的情况, 第一个IP为客户端真实IP,多个IP按照','分割 //"***.***.***.***".length() = 15
+		if (ipAddress != null && ipAddress.length() > GlobalConstant.MAX_IP_LENGTH) {
+			if (ipAddress.indexOf(GlobalConstant.Symbol.COMMA) > 0) {
+				ipAddress = ipAddress.substring(0, ipAddress.indexOf(GlobalConstant.Symbol.COMMA));
+			}
+		}
+		return ipAddress;
+	}
+---------------------
+
+springboot 增加配置
+---------------------
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    remote-ip-header: x-forwarded-for
+  use-forward-headers: true
+  ...
+---------------------

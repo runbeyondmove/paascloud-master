@@ -1,0 +1,19 @@
+开发环境搭建
+
+1. 在master pom文件上配置打包跳过测试，然后安装没有问题
+2. 安装mysql5.7、redis、nginx、rocketMq、zookeeper、rabbitMq
+3. 
+
+
+
+启动流程：
+	1. paascloud-eureka
+	2. paascloud-discovery
+	3. paascloud-provider-uac 
+		启动zoopkeeper
+		启动rocketMQ
+		启动rabbitMQ，设置用户和密码
+		启动redis，且设置密码，在配置中心上配置密码，并且注意参数：basedir: /data/config/paascloud-config-repo（查看是否刷新）
+		
+		
+帐号和密码：admin 123456
