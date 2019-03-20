@@ -2,7 +2,7 @@
 
 1. 在master pom文件上配置打包跳过测试，然后安装没有问题
 2. 安装mysql5.7、redis、nginx、rocketMq、zookeeper、rabbitMq
-3. 
+
 
 
 
