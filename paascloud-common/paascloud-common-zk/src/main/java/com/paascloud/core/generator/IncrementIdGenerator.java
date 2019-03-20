@@ -28,6 +28,7 @@ public class IncrementIdGenerator implements IdGenerator {
 
 	/**
 	 * Instantiates a new Increment id generator.
+	 * 实例化一个新的Increment id生成器
 	 *
 	 * @param registerDto the register dto
 	 */
@@ -37,6 +38,7 @@ public class IncrementIdGenerator implements IdGenerator {
 
 	/**
 	 * Next id long.
+	 * 使用分布式注册中心生成有序的注册id
 	 *
 	 * @return the long
 	 */

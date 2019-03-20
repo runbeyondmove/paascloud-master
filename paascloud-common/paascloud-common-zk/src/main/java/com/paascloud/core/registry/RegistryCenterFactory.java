@@ -48,6 +48,7 @@ public final class RegistryCenterFactory {
 
 	/**
 	 * Startup.
+	 * 创建注册中心，使用注册中心生成serviceId，并注册MQ
 	 *
 	 * @param paascloudProperties the paascloud properties
 	 * @param host                the host

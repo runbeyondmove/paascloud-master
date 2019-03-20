@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter {
+	// 默认生成的方法是public的，如果要修改方法修饰符可以设置AccessLevel的值，
 	@Getter(AccessLevel.PROTECTED)
 	private ZookeeperProperties zkConfig;
 
@@ -77,6 +78,7 @@ public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter 
 			builder.connectionTimeoutMs(zkConfig.getConnectionTimeoutMilliseconds());
 		}
 		if (!Strings.isNullOrEmpty(zkConfig.getDigest())) {
+			//创建客户端的时候授权，即访问权限 如：authorization("digest","admin:123".getBytes())
 			builder.authorization("digest", zkConfig.getDigest().getBytes(Charsets.UTF_8))
 					.aclProvider(new ACLProvider() {
 
@@ -476,6 +478,7 @@ public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter 
 
 	/**
 	 * Register mq.
+	 * 使用在可靠消息服务中 充当可靠消息服务的注册中心
 	 *
 	 * @param app           the app
 	 * @param host          the host

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * The class Reliable message register dto.
+ * 可靠消息注册dto
  *
  * @author paascloud.net @gmail.com
  */
