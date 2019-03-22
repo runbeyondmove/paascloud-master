@@ -58,6 +58,20 @@ public class MqProducerStoreAspect {
 	}
 
 	/**
+	 * 上游应用将本地业务执行和消息发送绑定在同一个本地事务中，保证要么本地操作成功并发送 MQ 消息，要么两步操作都失败并回滚。这里采用自定义切面完成，可对照代码查看。
+	 * 1. 上游应用发送待确认消息到可靠消息系统。(本地消息落地)
+	 * 2. 可靠消息系统保存待确认消息并返回。
+	 * 3. 上游应用执行本地业务。
+	 * 4. 上游应用通知可靠消息系统确认业务已执行并发送消息。
+	 * 5. 可靠消息系统修改消息状态为发送状态并将消息投递到 MQ 中间件。
+	 *
+	 *  消息发送一致性：是指产生消息的业务动作与消息发送的一致。
+	 *  也就是说，如果业务操作成功，那么由这个业务操作所产生的消息一定要成功投递出去(一般是发送到kafka、rocketmq、rabbitmq等消息中间件中)，否则就丢消息。
+	 *
+	 * 参考文章：http://www.tianshouzhi.com/api/tutorials/distributed_transaction/389
+	 * 或者http://blog.paascloud.net/2018/03/18/java-env/rocketmq/rocketmq-reliable-message-consistency/
+	 */
+	/**
 	 * Add exe time method object.
 	 *
 	 * @param joinPoint the join point
@@ -97,6 +111,8 @@ public class MqProducerStoreAspect {
 			mqMessageService.saveWaitConfirmMessage(domain);
 		}
 		result = joinPoint.proceed();
+
+		// 经过测试，发现下面如果出现异常，则事务都回滚掉
 		if (type == MqSendTypeEnum.SAVE_AND_SEND) {
 			mqMessageService.saveAndSendMessage(domain);
 		} else if (type == MqSendTypeEnum.DIRECT_SEND) {

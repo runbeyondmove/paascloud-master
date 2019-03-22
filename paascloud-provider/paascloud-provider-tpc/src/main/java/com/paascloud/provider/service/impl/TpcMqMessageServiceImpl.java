@@ -46,6 +46,7 @@ import java.util.List;
 
 /**
  * The class Tpc mq message service.
+ * 可靠消息
  *
  * @author paascloud.net @gmail.com
  */

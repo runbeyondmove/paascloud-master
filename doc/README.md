@@ -37,15 +37,15 @@
 │  │
 │  ├─paascloud-provider
 │  │  │
-│  │  ├─paascloud-provider-mdc------------------数据服务中心
+│  │  ├─paascloud-provider-mdc------------------数据服务中心（业务）
 │  │  │
-│  │  ├─paascloud-provider-omc------------------订单服务中心
+│  │  ├─paascloud-provider-omc------------------订单服务中心（业务）
 │  │  │
-│  │  ├─paascloud-provider-opc------------------对接服务中心
+│  │  ├─paascloud-provider-opc------------------对接服务中心（业务）
 │  │  │
-│  │  ├─paascloud-provider-tpc------------------任务服务中心
+│  │  ├─paascloud-provider-tpc------------------任务服务中心(核心基础：消息补偿，消息一致性)
 │  │  │
-│  │  └─paascloud-provider-uac------------------用户服务中心
+│  │  └─paascloud-provider-uac------------------用户服务中心(核心基础：认证中心+权限管理)
 │  │
 │  ├─paascloud-provider-api
 │  │  │
