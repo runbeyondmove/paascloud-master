@@ -70,7 +70,7 @@
             <artifactId>spring-boot-admin-starter-client</artifactId>
         </dependency>
         <!-- alipay start-->
-        <dependency>
+<!--        <dependency>
             <groupId>com.alipay</groupId>
             <artifactId>alipay-sdk-java</artifactId>
             <version>20170725114550</version>
@@ -79,7 +79,14 @@
             <groupId>com.alipay</groupId>
             <artifactId>alipay-trade-sdk</artifactId>
             <version>20161215</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.liuzm.paascloud.common</groupId>
+            <artifactId>paascloud-common-libs</artifactId>
+            <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>

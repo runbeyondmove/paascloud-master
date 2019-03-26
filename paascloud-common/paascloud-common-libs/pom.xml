@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.liuzm.paascloud.common</groupId>
+        <artifactId>paascloud-common</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>paascloud-common-libs</artifactId>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>20170725114550</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/com/alipay/alipay-sdk-java/20170725114550/alipay-sdk-java-20170725114550.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>alipay-trade-sdk</artifactId>
+            <version>20161215</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/com/alipay/alipay-trade-sdk/20161215/alipay-trade-sdk-20161215.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>sdk-java</artifactId>
+            <version>20161213173952</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/com/alipay/sdk-java/20161213173952/sdk-java-20161213173952.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.arronlong.httpclientutil</groupId>
+            <artifactId>httpclientutil</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/com/arronlong/httpclientutil/httpclientutil/1.0/httpclientutil-1.0.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.liuzm.mybatis</groupId>
+            <artifactId>mybatis-generator</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/com/liuzm/mybatis/mybatis-generator/1.0/mybatis-generator-1.0.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.liuzm.paascloud</groupId>
+            <artifactId>elastic-job-lite-starter</artifactId>
+            <!--<version>1.0</version>-->
+            <version>2.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/com/liuzm/paascloud/elastic-job-lite-starter/2.0/elastic-job-lite-starter-2.0.jar</systemPath>
+        </dependency>
+
+    </dependencies>
+</project>

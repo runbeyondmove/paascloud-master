@@ -325,7 +325,7 @@
         <version>[7.0.0, 7.2.99]</version>
       </dependency>
       <!-- alipay start-->
-      <dependency>
+      <!--<dependency>
         <groupId>com.alipay</groupId>
         <artifactId>alipay-sdk-java</artifactId>
         <version>20170725114550</version>
@@ -334,7 +334,7 @@
         <groupId>com.alipay</groupId>
         <artifactId>alipay-trade-sdk</artifactId>
         <version>20161215</version>
-      </dependency>
+      </dependency>-->
       <!-- alipay end-->
       <dependency>
         <groupId>org.modelmapper</groupId>
@@ -388,11 +388,11 @@
         </exclusions>
       </dependency>
 
-      <dependency>
+<!--      <dependency>
         <groupId>com.liuzm.paascloud</groupId>
         <artifactId>elastic-job-lite-starter</artifactId>
         <version>1.0</version>
-      </dependency>
+      </dependency>-->
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>

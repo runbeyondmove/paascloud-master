@@ -15,7 +15,7 @@
         <module>paascloud-generator-mdc</module>
         <module>paascloud-generator-omc</module>
         <module>paascloud-generator-opc</module>
-		    <module>paascloud-generator-tpc</module>
+        <module>paascloud-generator-tpc</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -77,9 +77,15 @@
             <artifactId>mapper</artifactId>
             <version>3.3.9</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.liuzm.mybatis</groupId>
             <artifactId>mybatis-generator</artifactId>
+            <version>1.0</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.liuzm.paascloud.common</groupId>
+            <artifactId>paascloud-common-libs</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
