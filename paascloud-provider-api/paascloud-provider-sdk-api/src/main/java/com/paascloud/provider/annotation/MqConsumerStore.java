@@ -24,6 +24,6 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface MqConsumerStore {
-
+	// 前置状态
 	boolean storePreStatus() default true;
 }

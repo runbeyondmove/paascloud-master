@@ -28,9 +28,10 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface MqProducerStore {
+	// 消息发送类型
 	MqSendTypeEnum sendType() default MqSendTypeEnum.WAIT_CONFIRM;
-
+	// 消息顺序类型 有序无序
 	MqOrderTypeEnum orderType() default MqOrderTypeEnum.ORDER;
-
+	// 消息延时级别
 	DelayLevelEnum delayLevel() default DelayLevelEnum.ZERO;
 }

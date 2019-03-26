@@ -57,6 +57,17 @@ public class MqConsumerStoreAspect {
 	}
 
 	/**
+	 * 1. 下游应用监听 MQ 消息并执行业务，并且将消息的消费结果通知可靠消息服务。(本地消息落地)
+	 * 2. 可靠消息的状态需要和下游应用的业务执行保持一致，可靠消息状态不是已完成时，确保下游应用未执行，可靠消息状态是已完成时，确保下游应用已执行。
+	 *
+	 * 下游应用和可靠消息服务之间的交互流程
+	 * 1. 下游应用监听 MQ 消息组件并获取消息, 并存储本地消息
+	 * 2. 下游系统通知可靠消息服务已接收到消息
+	 * 3. 可靠消息把消息更新为已接收状态
+	 * 4. 下游应用根据 MQ 消息体信息处理本地业务
+	 * 5. 下游应用向 MQ 组件自动发送 ACK 确认消息被消费
+	 * 6. 下游应用通知可靠消息系统消息被成功消费，可靠消息将该消息状态更改为以消费,任务表状态修改为已完成。
+	 *
 	 * Add exe time method object.
 	 *
 	 * @param joinPoint the join point
@@ -93,6 +104,7 @@ public class MqConsumerStoreAspect {
 		MqMessageData dto = this.getTpcMqMessageDto(messageExtList.get(0));
 		final String messageKey = dto.getMessageKey();
 		if (isStorePreStatus) {
+			// 前置状态，先确认接受到的信息
 			mqMessageService.confirmReceiveMessage(consumerGroup, dto);
 		}
 		String methodName = joinPoint.getSignature().getName();
@@ -100,6 +112,7 @@ public class MqConsumerStoreAspect {
 			result = joinPoint.proceed();
 			log.info("result={}", result);
 			if (CONSUME_SUCCESS.equals(result.toString())) {
+				// 消费成功
 				mqMessageService.saveAndConfirmFinishMessage(consumerGroup, messageKey);
 			}
 		} catch (Exception e) {
