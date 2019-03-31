@@ -77,17 +77,17 @@
             <artifactId>mapper</artifactId>
             <version>3.3.9</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>com.liuzm.mybatis</groupId>
             <artifactId>mybatis-generator</artifactId>
             <version>1.0</version>
-        </dependency>-->
+        </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.liuzm.paascloud.common</groupId>
             <artifactId>paascloud-common-libs</artifactId>
             <version>1.0</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>
