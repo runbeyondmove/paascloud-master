@@ -23,17 +23,18 @@ import java.util.List;
 
 /**
  * The class Pc authorization server config.
+ * 授权服务
  *
  * @author paascloud.net @gmail.com
  */
 @Configuration
-@EnableAuthorizationServer
+@EnableAuthorizationServer // 开启OAuth 2.0 授权服务
 public class PcAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Autowired
 	private TokenStore tokenStore;
 	@Autowired
-	private AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;//认证管理器
 	@Resource
 	private UserDetailsService userDetailsService;
 	@Resource
@@ -59,6 +60,7 @@ public class PcAuthorizationServerConfig extends AuthorizationServerConfigurerAd
 
 	/**
 	 * Configure.
+	 * 配置客户端详情信息(内存或JDBC来实现)
 	 *
 	 * @param clients the clients
 	 *
@@ -71,6 +73,7 @@ public class PcAuthorizationServerConfig extends AuthorizationServerConfigurerAd
 
 	/**
 	 * Configure.
+	 * 配置授权、令牌的访问端点和令牌服务
 	 *
 	 * @param endpoints the endpoints
 	 *

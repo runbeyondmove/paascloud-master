@@ -29,6 +29,8 @@ public class PcAuthorizeConfigManager implements AuthorizeConfigManager {
 
 	/**
 	 * Config.
+	 * 校验:
+	 * 	  在整个授权配置中，应该有且仅有一个针对anyRequest的配置，没有则系统默认一个
 	 *
 	 * @param config the config
 	 */

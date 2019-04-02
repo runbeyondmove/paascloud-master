@@ -5,6 +5,7 @@ import org.apache.curator.retry.RetryNTimes;
 
 /**
  * 注册中心.
+ * 在zookeeper中，进行服务注册，实际上就是在zookeeper中创建了一个znode节点，该节点存储了该服务的IP、端口、调用方式(协议、序列化方式)等。
  *
  * @author zhangliang
  */

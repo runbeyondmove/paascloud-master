@@ -135,6 +135,11 @@ public class UniqueIdGenerator implements IdGenerator {
 		// 更新上次生成id的时间戳
 		lastTimestamp = current;
 
+		/**
+		 * 41 bit 作为毫秒数 - 41位的长度可以使用69年
+		 * 10 bit 作为机器编号 （5个bit是数据中心，5个bit的机器ID） - 10位的长度最多支持部署1024个节点
+		 * 12 bit 作为毫秒内序列号 - 12位的计数顺序号支持每个节点每毫秒产生4096个ID序号
+		 */
 		// 进行移位操作生成int64的唯一ID
 		return ((current - START_TIME) << TIMESTAMP_LEFT_SHIFT)
 				| (this.appHostId << APP_HOST_ID_SHIFT)

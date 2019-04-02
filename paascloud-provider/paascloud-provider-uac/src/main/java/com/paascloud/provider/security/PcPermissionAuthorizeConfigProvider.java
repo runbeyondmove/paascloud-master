@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * The class Pc permission authorize config provider.
+ * PC许可授权配置提供者
  *
  * @author paascloud.net @gmail.com
  */

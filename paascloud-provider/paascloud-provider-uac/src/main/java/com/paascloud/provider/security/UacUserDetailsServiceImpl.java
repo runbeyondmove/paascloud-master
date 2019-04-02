@@ -14,6 +14,7 @@ import java.util.Collection;
 
 /**
  * The class Uac user details service.
+ * 自定义UserDetailsService校验, SpringSecurity用来查询用户信息的接口
  *
  * @author paascloud.net @gmail.com
  */

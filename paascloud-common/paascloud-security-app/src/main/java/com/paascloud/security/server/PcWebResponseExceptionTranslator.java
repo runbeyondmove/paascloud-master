@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.provider.error.WebResponseExceptionTr
 
 /**
  * The class Pc web response exception translator.
+ * 处理授权认证服务的错误信息
  *
  * @author paascloud.net @gmail.com
  */
