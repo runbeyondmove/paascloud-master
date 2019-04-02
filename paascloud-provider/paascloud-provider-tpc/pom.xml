@@ -79,7 +79,7 @@
         <dependency>
           <groupId>com.liuzm.paascloud</groupId>
           <artifactId>elastic-job-lite-starter</artifactId>
-          <!--<version>1.0</version>-->
+          <version>1.0</version>
         </dependency>
 
         <dependency>
