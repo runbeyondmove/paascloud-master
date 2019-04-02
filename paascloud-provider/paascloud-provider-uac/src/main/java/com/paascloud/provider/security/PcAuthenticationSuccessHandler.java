@@ -39,6 +39,8 @@ public class PcAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 	private ClientDetailsService clientDetailsService;
 	@Resource
 	private UacUserService uacUserService;
+
+	//接口里定义了 OAuth 2.0 令牌的操作方法
 	@Resource
 	private AuthorizationServerTokenServices authorizationServerTokenServices;
 

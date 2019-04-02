@@ -70,7 +70,7 @@
 │  │  │
 │  │  ├─paascloud-common-util------------------公共工具包
 │  │  │
-│  │  ├─paascloud-common-zk------------------zookeeper配置
+│  │  ├─paascloud-common-zk------------------zookeeper配置（zk注册中心及全局唯一ID生成器）
 │  │  │
 │  │  ├─paascloud-security-app------------------公共无状态安全认证
 │  │  │
@@ -105,6 +105,11 @@
 只是做了业务微服务中心的合并，并没有将架构中的 注册中心 监控中心 服务发现中心进行合并。
 ```
 
+在使用 Spring Cloud 体系来构建微服务的过程中，用户请求是通过网关(ZUUL 或 Spring APIGateway)以 HTTP 协议来传输信息，
+API 网关将自己注册为 Eureka 服务治理下的应用，同时也从 Eureka 服务中获取所有其他微服务的实例信息。
+搭建 OAuth2 认证授权服务，并不是给每个微服务调用，而是通过 API 网关进行统一调用来对网关后的微服务做前置过滤，
+所有的请求都必须先通过 API 网关，API 网关在进行路由转发之前对该请求进行前置校验，实现对微服务系统中的其他的服务接口的安全与权限校验。
+
 
 ### 作者介绍
 
@@ -122,9 +127,6 @@ Spring Cloud 爱好者,现就任于鲜易供应链平台研发部.
  ⑦：797876073    
  ⑧：814712305    
  ⑨：……    
-
-### FAQ
-* [相关问题](https://github.com/paascloud/paascloud-master/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
 
 ## 配套项目
 
@@ -152,7 +154,310 @@ Spring Cloud 爱好者,现就任于鲜易供应链平台研发部.
 ![项目架构图](http://img.paascloud.net/paascloud/doc/paascloud-project.png)
 
 
+## 这个项目为什么同时使用了Zookeeper和Eureka？
+总结：  
+著名的CAP理论指出，一个分布式系统不可能同时满足C(一致性)、A(可用性)和P(分区容错性)。  
+由于分区容错性在是分布式系统中必须要保证的，因此我们只能在A和C之间进行权衡。  
+在此Zookeeper保证的是CP（即任何时刻对ZooKeeper的访问请求能得到一致的数据结果，同时系统对网络分割具备容错性；但是它不能保证每次服务请求的可用性；
+ZooKeeper是分布式协调服务，它的职责是保证数据（注：配置数据，状态数据）在其管辖下的所有服务之间保持同步、一致）, 
+而Eureka则是AP。
+
+**注册服务是必须可用的**
+
+Zookeeper选举期间整个zk集群是不可用的，而只要有一台Eureka还在，就能保证注册服务可用(保证可用性)
+
+分区容错性：单台服务器，或多台服务器出问题（主要是网络问题）后，正常服务的服务器依然能正常提供服务，并且满足设计好的一致性和可用性 
+重点在于：部分服务器因网络问题，业务依然能够继续运行
+
+1. [Zookeeper用作注册中心的原理](https://blog.csdn.net/ljheee/article/details/81251897)
+2. [Eureka与Zookeeper服务注册中心比较](https://blog.csdn.net/qq_36512792/article/details/79557564)
 
 
 
 
+# 技术选型
+##  后端架构
+```
+spring-cloud Edgware.RELEASE
+Spring Cloud Eureka
+spring cloud config
+spring cloud security
+Spring Cloud Feign
+Spring Cloud Zuul
+Spring Cloud Hystrix
+Spring Cloud Turbine
+spring Cloud Sleuth Zipkin
+Spring Cloud Stream 
+Binder Rabbit
+Spring Cloud Oauth2
+Spring Cloud Sleuth
+elastic-job
+Spring Boot
+Spring Boot Mail
+Swagger2
+MyBatis
+通用Mapper
+Mybatis_PageHelper
+Freemarker
+RabbitMQ
+RocketMQ
+Druid
+MySQL
+Redis
+Zookeeper
+钉钉机器人
+阿里云短信服务
+七牛云文件服务
+...
+```
+
+## 前端架构
+```
+Vue全家桶以及相关组件
+"axios": "^0.17.1",
+"crypto-js": "^3.1.9-1",
+"echarts": "^3.8.5",
+"element-ui": "^2.0.10",
+"font-awesome": "^4.7.0",
+"js-cookie": "^2.2.0",
+"lockr": "^0.8.4",
+"nprogress": "^0.2.0",
+"vue": "^2.5.9",
+"vue-infinite-scroll": "^2.0.2",
+"vue-lazyload": "^1.1.4",
+"vue-router": "^3.0.1",
+"vuex": "^3.0.1"
+```
+
+# 配置域名
+```
+127.0.0.1 dev-login.paascloud.net
+127.0.0.1 dev-admin.paascloud.net
+127.0.0.1 dev-api.paascloud.net
+127.0.0.1 dev-mall.paascloud.net
+127.0.0.1 paascloud-discovery
+127.0.0.1 paascloud-eureka
+127.0.0.1 paascloud-gateway
+127.0.0.1 paascloud-monitor
+127.0.0.1 paascloud-zipkin
+127.0.0.1 paascloud-provider-uac
+127.0.0.1 paascloud-provider-mdc
+127.0.0.1 paascloud-provider-omc
+127.0.0.1 paascloud-provider-opc
+
+
+192.168.241.21 paascloud-db-mysql
+192.168.241.21 paascloud-db-redis
+192.168.241.21 paascloud-mq-rabbit
+192.168.241.21 paascloud-mq-rocket
+192.168.241.21 paascloud-provider-zk
+
+192.168.241.101 paascloud-zk-01
+192.168.241.102 paascloud-zk-02
+192.168.241.103 paascloud-zk-03
+```
+
+# nginx配置
+```
+server {
+    listen       80;
+    server_name  dev-admin.paascloud.net;
+    location / {
+        proxy_pass http://localhost:7020;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+server {
+    listen       80;
+    server_name  dev-login.paascloud.net;
+    location / {
+        proxy_pass http://localhost:7010;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+server {
+    listen       80;
+    server_name  dev-mall.paascloud.net;
+    location / {
+        proxy_pass http://localhost:7030;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+server {
+    listen       80;
+    server_name  dev-api.paascloud.net;
+    location ~ {
+        proxy_pass   http://localhost:7979;
+    }
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+```
+
+# 微服务启动顺序
+1. paascloud-eureka
+2. paascloud-discovery
+3. paascloud-provider-uac
+4. paascloud-gateway
+5. 剩下微服务无启动数序要求
+
+
+# 异常处理
+参数抛指定的参数异常， 业务异常必须抛出指定编码。 正例：
+`throw new UacBizException(ErrorCodeEnum.UAC10011021);`
+如有业务编码 需要抛出指定业务编码
+`throw new UacBizException(ErrorCodeEnum.UAC10013002, menuId);`
+ErrorCodeEnum枚举实现详见代码
+```
+public int deleteUacMenuById(Long id, LoginAuthDto loginAuthDto) {
+        Preconditions.checkArgument(id != null, "菜单id不能为空");
+        int result;
+        // 获取当前菜单信息
+        UacMenu uacMenuQuery = new UacMenu();
+        uacMenuQuery.setId(id);
+        uacMenuQuery = mapper.selectOne(uacMenuQuery);
+        if (PublicUtil.isEmpty(uacMenuQuery)) {
+            throw new UacBizException(ErrorCodeEnum.UAC10013003, id);
+        }
+
+        ...
+        return result;
+    }
+```
+
+# web全局异常
+```
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @Resource
+    private TaskExecutor taskExecutor;
+    @Value("${spring.profiles.active}")
+    String profile;
+    @Value("${spring.application.name}")
+    String applicationName;
+    @Resource
+    private MdcExceptionLogFeignApi mdcExceptionLogFeignApi;
+
+    /**
+     * 参数非法异常.
+     *
+     * @param e the e
+     *
+     * @return the wrapper
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Wrapper illegalArgumentException(IllegalArgumentException e) {
+        log.error("参数非法异常={}", e.getMessage(), e);
+        return WrapMapper.wrap(ErrorCodeEnum.GL99990100.code(), e.getMessage());
+    }
+
+    /**
+     * 业务异常.
+     *
+     * @param e the e
+     *
+     * @return the wrapper
+     */
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Wrapper businessException(BusinessException e) {
+        log.error("业务异常={}", e.getMessage(), e);
+        return WrapMapper.wrap(e.getCode() == 0 ? Wrapper.ERROR_CODE : e.getCode(), e.getMessage());
+    }
+
+
+    /**
+     * 全局异常.
+     *
+     * @param e the e
+     *
+     * @return the wrapper
+     */
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public Wrapper exception(Exception e) {
+        log.info("保存全局异常信息 ex={}", e.getMessage(), e);
+        taskExecutor.execute(() -> {
+            GlobalExceptionLogDto globalExceptionLogDto = new GlobalExceptionLogDto().getGlobalExceptionLogDto(e, profile, applicationName);
+            mdcExceptionLogFeignApi.saveAndSendExceptionLog(globalExceptionLogDto);
+        });
+        return WrapMapper.error();
+    }
+}
+```
+# Rpc全局异常
+```
+@Slf4j
+public class Oauth2FeignErrorInterceptor implements ErrorDecoder {
+    private final ErrorDecoder defaultErrorDecoder = new Default();
+
+    /**
+     * Decode exception.
+     *
+     * @param methodKey the method key
+     * @param response  the response
+     *
+     * @return the exception
+     */
+    @Override
+    public Exception decode(final String methodKey, final Response response) {
+        if (response.status() >= HttpStatus.BAD_REQUEST.value() && response.status() < HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+            return new HystrixBadRequestException("request exception wrapper");
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            HashMap map = mapper.readValue(response.body().asInputStream(), HashMap.class);
+            Integer code = (Integer) map.get("code");
+            String message = (String) map.get("message");
+            if (code != null) {
+                ErrorCodeEnum anEnum = ErrorCodeEnum.getEnum(code);
+                if (anEnum != null) {
+                    if (anEnum == ErrorCodeEnum.GL99990100) {
+                        throw new IllegalArgumentException(message);
+                    } else {
+                        throw new BusinessException(anEnum);
+                    }
+                } else {
+                    throw new BusinessException(ErrorCodeEnum.GL99990500, message);
+                }
+            }
+        } catch (IOException e) {
+            log.info("Failed to process response body");
+        }
+        return defaultErrorDecoder.decode(methodKey, response);
+    }
+}
+```
+
+
+
+
+
+
+# 一些总结
+## 1. 授权配置
+授权配置提供器，各个模块和业务系统可以通过实现此接口向系统添加授权配置。
+com.paascloud.security.core.authorize.AuthorizeConfigProvider，可参考实现PcAuthorizeConfigProvider
+
+## 2. 表单登陆配置
+com.paascloud.security.core.authentication.FormAuthenticationConfig

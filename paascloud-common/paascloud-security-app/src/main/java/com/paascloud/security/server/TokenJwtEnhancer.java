@@ -24,6 +24,7 @@ import java.util.Map;
 
 /**
  * The class Token jwt enhancer.
+ * jwt token增强扩展
  *
  * @author paascloud.net @gmail.com
  */
