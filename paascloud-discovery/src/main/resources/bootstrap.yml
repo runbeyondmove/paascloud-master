@@ -1,11 +1,13 @@
 spring:
   cloud:
     config:
+      enabled: true
       server:
         git:
           uri: https://github.com/runbeyondmove/paascloud-config-repo_20190331.git
-          username:
-          password:
+          # 私有仓库必须要配置账号密码
+          username: runbeyondmove
+          password: move121471022
           search-paths: /*
           default-label: ${spring.profiles.active}
           basedir: /data/config/paascloud-config-repo
@@ -29,4 +31,6 @@ eureka:
       defaultZone: http://root:root@localhost:8761/eureka/
       #defaultZone: http://root:root@paascloud-eureka:8761/eureka/
   instance:
-    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}
+    prefer-ip-address: true
+    hostname: localhost
+    instance-id: ${spring.application.name}:${eureka.instance.hostname}:${server.port}

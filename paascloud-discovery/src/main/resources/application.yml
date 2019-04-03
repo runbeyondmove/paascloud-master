@@ -7,20 +7,27 @@ spring:
   application:
     name: @pom.artifactId@
   rabbitmq:
-    host: paascloud-mq-rabbit
+    host: 118.89.51.123
     port: 5672
     username: paas
     password: paas@run
     virtual-host: paas_virtual
   boot:
     admin:
-      username: admin
+#      username: admin
+#      password: admin
+      client:
+        username: admin
+        password: admin
+  security:
+    user:
+      name: admin
       password: admin
 
-security:
-  user:
-    name: admin
-    password: admin
+#security:
+#  user:
+#    name: admin
+#    password: admin
 
 info:
   软件著作权: paascloud快速搭建企业级分布式微服务平台

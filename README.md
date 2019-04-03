@@ -316,6 +316,36 @@ server {
 5. 剩下微服务无启动数序要求
 
 
+# 其他服务使用配置中心配置记得要参考paascloud-provider-uac项目
+Config支持我们使用的请求的参数规则为：
+
+> - / { 应用名 } / { 环境名 } [ / { 分支名 } ]
+> - / { 应用名 } - { 环境名 }.yml
+> - / { 应用名 } - { 环境名 }.properties
+> - / { 分支名 } / { 应用名 } - { 环境名 }.yml
+> - / { 分支名 } / { 应用名 } - { 环境名 }.properties
+
+在paascloud-provider-uac中使用的最后一种
+如果配置正确的话，那discovery client的日志如下：
+```log
+2019-04-03 16:56:02.691  INFO [bootstrap,,,] [paascloud-provider-uac,,,,] 9620 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at: http://10.53.144.48:8080/
+2019-04-03 16:56:04.941  INFO [bootstrap,,,] [paascloud-provider-uac,,,,] 9620 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Located environment: name=paascloud-provider-uac, profiles=[dev], label=outside-dev, version=2a6b6d54e28a4abbaf307aafe19587594f4944dc, state=null
+2019-04-03 16:56:04.941  INFO [bootstrap,,,] [paascloud-provider-uac,,,,] 9620 --- [  restartedMain] b.c.PropertySourceBootstrapConfiguration : Located property source: CompositePropertySource [name='configService', propertySources=[MapPropertySource {name='configClient'}, MapPropertySource {name='https://github.com/runbeyondmove/paascloud-config-repo_20190331.git/paascloud-provider-uac-dev.yml'}, MapPropertySource {name='https://github.com/runbeyondmove/paascloud-config-repo_20190331.git/application-dev.yml'}]]
+2019-04-03 16:56:05.004  INFO [bootstrap,,,] [paascloud-provider-uac,,,,] 9620 --- [  restartedMain] com.paascloud.PaasCloudUacApplication    : The following profiles are active: outside-dev
+```
+
+而discovery server的日志会出现以下几行
+```log
+2019-04-03 17:24:53.448  INFO 12508 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2019-04-03 17:24:55.684  INFO 12508 --- [io-8080-exec-10] .c.s.e.MultipleJGitEnvironmentRepository : Fetched for remote outside-dev and found 1 updates
+2019-04-03 17:24:55.780  INFO 12508 --- [io-8080-exec-10] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@73425db3: startup date [Wed Apr 03 17:24:55 CST 2019]; root of context hierarchy
+2019-04-03 17:24:55.796  INFO 12508 --- [io-8080-exec-10] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+2019-04-03 17:24:55.796  INFO 12508 --- [io-8080-exec-10] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: file:/D:/data/config/paascloud-config-repo/paascloud-provider-uac-dev.yml
+2019-04-03 17:24:55.796  INFO 12508 --- [io-8080-exec-10] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: file:/D:/data/config/paascloud-config-repo/application-dev.yml
+2019-04-03 17:24:55.796  INFO 12508 --- [io-8080-exec-10] s.c.a.AnnotationConfigApplicationContext : Closing org.springframework.context.annotation.AnnotationConfigApplicationContext@73425db3: startup date [Wed Apr 03 17:24:55 CST 2019]; root of context hierarchy
+```
+
+
 # 异常处理
 参数抛指定的参数异常， 业务异常必须抛出指定编码。 正例：
 `throw new UacBizException(ErrorCodeEnum.UAC10011021);`

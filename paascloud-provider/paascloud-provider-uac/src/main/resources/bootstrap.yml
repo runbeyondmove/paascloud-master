@@ -1,20 +1,23 @@
 spring:
   profiles:
-    active: dev
+    active: outside-dev
   cloud:
     config:
-      fail-fast: true
+      fail-fast: false
       discovery:
         service-id: paascloud-discovery
+        # 是否从配置中心上读取
         enabled: true
+      # 指明远程仓库的分支
       label: ${spring.profiles.active}
-      profile: ${spring.profiles.active}
+      # 哪个环境的配置文件
+      profile: dev
       username: admin
       password: admin
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://root:root@paascloud-eureka:8761/eureka/
+      defaultZone: http://root:root@localhost:8761/eureka/
   instance:
     instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}
