@@ -11,6 +11,7 @@ spring:
     port: 5672
     username: paas
     password: paas@run
+    virtual-host: paas_virtual
   boot:
     admin:
       username: admin
