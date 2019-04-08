@@ -18,7 +18,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * The interface No need access authentication.
+ * The interface No need access authentication.。
+ * 接口无需访问身份验证 注解
  *
  * @author paascloud.net @gmail.com
  */

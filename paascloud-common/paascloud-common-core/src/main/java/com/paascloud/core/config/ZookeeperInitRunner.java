@@ -25,7 +25,8 @@ import java.net.InetAddress;
 /**
  * The class Zookeeper init runner.
  *
- * SpringBoot在项目启动后会遍历所有实现CommandLineRunner的实体类并执行run方法，即在springboot启动后初始化Zookeeper注册中心
+ * SpringBoot在项目启动后会遍历所有实现CommandLineRunner的实体类并执行run方法，
+ * 即在SpringBoot启动后初始化Zookeeper注册中心
  *
  * @author paascloud.net @gmail.com
  */

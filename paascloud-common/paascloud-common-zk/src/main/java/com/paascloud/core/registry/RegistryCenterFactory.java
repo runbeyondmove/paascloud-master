@@ -48,7 +48,7 @@ public final class RegistryCenterFactory {
 
 	/**
 	 * Startup.
-	 * 创建注册中心，使用注册中心生成serviceId，并注册MQ
+	 * 创建注册中心，使用注册中心生成serviceId，并注册MQ到Zookeeper上
 	 *
 	 * @param paascloudProperties the paascloud properties
 	 * @param host                the host
@@ -62,6 +62,12 @@ public final class RegistryCenterFactory {
 		registerMq(paascloudProperties, host, app);
 	}
 
+	/**
+	 * 注册RocketMQ，使用RocketMQ来实现可靠消息
+	 * @param paascloudProperties
+	 * @param host
+	 * @param app
+	 */
 	private static void registerMq(PaascloudProperties paascloudProperties, String host, String app) {
 		CoordinatorRegistryCenter coordinatorRegistryCenter = createCoordinatorRegistryCenter(paascloudProperties.getZk());
 		AliyunProperties.RocketMqProperties rocketMq = paascloudProperties.getAliyun().getRocketMq();

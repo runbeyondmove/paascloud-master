@@ -478,7 +478,7 @@ public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter 
 
 	/**
 	 * Register mq.
-	 * 使用在可靠消息服务中 充当可靠消息服务的注册中心
+	 * 使用在可靠消息服务中,zookeeper充当可靠消息服务的注册中心
 	 *
 	 * @param app           the app
 	 * @param host          the host
@@ -505,7 +505,8 @@ public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter 
 			this.persist(consumerRootPath, producerJson);
 			this.persistEphemeral(consumerRootPath + GlobalConstant.Symbol.SLASH + host, DateUtil.now());
 		}
-
+		log.info("reliableMessageRegister producerGroup={}",producerGroup);
+		log.info("reliableMessageRegister consumerGroup={}",consumerGroup);
 	}
 
 }

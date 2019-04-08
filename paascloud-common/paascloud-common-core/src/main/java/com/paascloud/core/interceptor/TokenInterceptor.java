@@ -108,7 +108,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 		}
 
 		if (isHaveAccess(handler)) {
-			log.info("<== preHandle - 不需要认证注解不走认证.  token={}");
+			log.info("<== preHandle - 不需要认证注解，不走认证.  token={}");
 			return true;
 		}
 
@@ -137,9 +137,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
 	private boolean isHaveAccess(Object handler) {
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
-
 		Method method = handlerMethod.getMethod();
-
 		NoNeedAccessAuthentication responseBody = AnnotationUtils.findAnnotation(method, NoNeedAccessAuthentication.class);
 		return responseBody != null;
 	}

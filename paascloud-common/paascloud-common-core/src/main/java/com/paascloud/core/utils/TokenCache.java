@@ -32,7 +32,7 @@ public class TokenCache {
 	public static final String NULL = "null";
 
 	/**
-	 * LRU算法
+	 * LRU算法：Least Recently Used,即最近最久未使用
 	 */
 	private static LoadingCache<String, String> localCache = CacheBuilder.newBuilder().initialCapacity(1000).maximumSize(10000).expireAfterAccess(12, TimeUnit.HOURS)
 			.build(new CacheLoader<String, String>() {

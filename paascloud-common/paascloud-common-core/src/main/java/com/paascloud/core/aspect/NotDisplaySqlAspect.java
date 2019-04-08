@@ -37,6 +37,7 @@ public class NotDisplaySqlAspect {
 
 	/**
 	 * Before.
+	 * 在com.paascloud.core.interceptor.SqlLogInterceptor#intercept(org.apache.ibatis.plugin.Invocation)中使用到
 	 */
 	@Before(value = "myPointCut()")
 	public void before() {

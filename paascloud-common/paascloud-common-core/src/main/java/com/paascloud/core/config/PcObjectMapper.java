@@ -33,6 +33,10 @@ public class PcObjectMapper {
 	private PcObjectMapper() {
 	}
 
+	/**
+	 * 配置消息转换器
+	 * @param converters
+	 */
 	public static void buidMvcMessageConverter(List<HttpMessageConverter<?>> converters) {
 		MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
 		SimpleModule simpleModule = new SimpleModule();
@@ -43,6 +47,7 @@ public class PcObjectMapper {
 				.registerModule(new Jdk8Module())
 				.registerModule(new JavaTimeModule())
 				.registerModule(simpleModule);
+		// 如果json中有新增的字段并且是实体类类中不存在的，不报错
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		jackson2HttpMessageConverter.setObjectMapper(objectMapper);
 		converters.add(jackson2HttpMessageConverter);
