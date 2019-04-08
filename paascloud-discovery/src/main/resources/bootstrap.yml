@@ -32,5 +32,6 @@ eureka:
       #defaultZone: http://root:root@paascloud-eureka:8761/eureka/
   instance:
     prefer-ip-address: true
-    hostname: localhost
-    instance-id: ${spring.application.name}:${eureka.instance.hostname}:${server.port}
+    # hostname: localhost
+    # spring could 2.0版本 需要改成${spring.cloud.client.ip-address}
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}

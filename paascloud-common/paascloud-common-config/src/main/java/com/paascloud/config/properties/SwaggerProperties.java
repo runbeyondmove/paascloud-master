@@ -31,9 +31,9 @@ public class SwaggerProperties {
 
 	private String licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0";
 
-	private String contactName = "无痕";
+	private String contactName = "lixiaorun";
 
-	private String contactUrl = "http://paascloud.net";
+	private String contactUrl = "http://www.spanrun.top/blog";
 
-	private String contactEmail = "paascloud.net@gmail.com";
+	private String contactEmail = "runbeyondmove@163.com";
 }

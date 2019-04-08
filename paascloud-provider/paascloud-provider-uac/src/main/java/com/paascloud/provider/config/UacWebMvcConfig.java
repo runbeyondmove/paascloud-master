@@ -53,6 +53,10 @@ public class UacWebMvcConfig extends WebMvcConfigurerAdapter {
 				.excludePathPatterns("/swagger-resources/**", "*.js", "/**/*.js", "*.css", "/**/*.css", "*.html", "/**/*.html", SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL);
 	}
 
+	/**
+	 * 通过实现WebMvcConfigurer接口来HttpMessageConverter，springboot2.0版本以后推荐使用这种方式来进行web配置，这样不会覆盖掉springboot的一些默认配置。
+	 * @param converters
+	 */
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		PcObjectMapper.buidMvcMessageConverter(converters);
