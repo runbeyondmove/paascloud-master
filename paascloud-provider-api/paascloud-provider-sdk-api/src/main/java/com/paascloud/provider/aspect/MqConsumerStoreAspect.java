@@ -112,7 +112,7 @@ public class MqConsumerStoreAspect {
 			result = joinPoint.proceed();
 			log.info("result={}", result);
 			if (CONSUME_SUCCESS.equals(result.toString())) {
-				// 消费成功
+				// 消费成功，更新消费确认消息列表 pc_tpc_mq_confirm，状态为已消费；
 				mqMessageService.saveAndConfirmFinishMessage(consumerGroup, messageKey);
 			}
 		} catch (Exception e) {

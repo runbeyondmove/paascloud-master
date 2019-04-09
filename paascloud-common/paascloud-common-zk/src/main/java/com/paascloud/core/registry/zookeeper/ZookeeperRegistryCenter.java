@@ -42,14 +42,19 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter {
-	// 默认生成的方法是public的，如果要修改方法修饰符可以设置AccessLevel的值，
+	/** 默认生成的方法是public的，如果要修改方法修饰符可以设置AccessLevel的值
+	* 初始化注册到中心的服务的配置类
+	**/
 	@Getter(AccessLevel.PROTECTED)
 	private ZookeeperProperties zkConfig;
 
 	private final Map<String, TreeCache> caches = new HashMap<>();
 
+	/** zookeeper操作客户端 */
 	@Getter
 	private CuratorFramework client;
+
+	/** DistributedAtomicInteger：Curator框架分布式场景的分布式计数器 */
 	@Getter
 	private DistributedAtomicInteger distributedAtomicInteger;
 
@@ -68,15 +73,22 @@ public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter 
 	@Override
 	public void init() {
 		log.debug("Elastic job: zookeeper registry center init, server lists is: {}.", zkConfig.getZkAddressList());
+		//Curator 建造者模式创建zookeeper客户端 <https://www.jianshu.com/p/70151fc0ef5d>
 		CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
+				//参数1：connectString zookeeper服务器列表（服务器地址及端口号，多个zookeeper服务器地址以 "," 分隔
 				.connectString(zkConfig.getZkAddressList())
+				// 参数2：retryPolicy 重试策略（一共四种，可以自行实现RetryPolicy接口）
+				// 分别为：ExponentialBackoffRetry（重试指定的次数, 且每一次重试之间停顿的时间逐渐增加）
 				.retryPolicy(new ExponentialBackoffRetry(zkConfig.getBaseSleepTimeMilliseconds(), zkConfig.getMaxRetries(), zkConfig.getMaxSleepTimeMilliseconds()));
 		if (0 != zkConfig.getSessionTimeoutMilliseconds()) {
+			// 参数3：sessionTimeoutMs 会话超时时间，默认60000ms
 			builder.sessionTimeoutMs(zkConfig.getSessionTimeoutMilliseconds());
 		}
 		if (0 != zkConfig.getConnectionTimeoutMilliseconds()) {
+			// 参数4：connectionTimeoutMs 连接创建超时时间，默认15000ms
 			builder.connectionTimeoutMs(zkConfig.getConnectionTimeoutMilliseconds());
 		}
+		// 5. 连接Zookeeper的权限令牌
 		if (!Strings.isNullOrEmpty(zkConfig.getDigest())) {
 			//创建客户端的时候授权，即访问权限 如：authorization("digest","admin:123".getBytes())
 			builder.authorization("digest", zkConfig.getDigest().getBytes(Charsets.UTF_8))
@@ -94,6 +106,7 @@ public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter 
 					});
 		}
 		client = builder.build();
+		// 启动zookeeper客户端
 		client.start();
 		try {
 			if (!client.blockUntilConnected(zkConfig.getMaxSleepTimeMilliseconds() * zkConfig.getMaxRetries(), TimeUnit.MILLISECONDS)) {
@@ -488,15 +501,17 @@ public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter 
 	 */
 	@Override
 	public void registerMq(final String app, final String host, final String producerGroup, final String consumerGroup, String namesrvAddr) {
-		// 注册生产者
 		final String producerRootPath = GlobalConstant.ZK_REGISTRY_PRODUCER_ROOT_PATH + GlobalConstant.Symbol.SLASH + app;
 		final String consumerRootPath = GlobalConstant.ZK_REGISTRY_CONSUMER_ROOT_PATH + GlobalConstant.Symbol.SLASH + app;
 		ReliableMessageRegisterDto dto;
+		// 注册生产者
 		if (StringUtils.isNotEmpty(producerGroup)) {
 			dto = new ReliableMessageRegisterDto().setProducerGroup(producerGroup).setNamesrvAddr(namesrvAddr);
 			String producerJson = JSON.toJSONString(dto);
 			this.persist(producerRootPath, producerJson);
 			this.persistEphemeral(producerRootPath + GlobalConstant.Symbol.SLASH + host, DateUtil.now());
+
+			log.info("reliableMessage register success,producerGroup={}",producerGroup);
 		}
 		// 注册消费者
 		if (StringUtils.isNotEmpty(consumerGroup)) {
@@ -504,9 +519,9 @@ public final class ZookeeperRegistryCenter implements CoordinatorRegistryCenter 
 			String producerJson = JSON.toJSONString(dto);
 			this.persist(consumerRootPath, producerJson);
 			this.persistEphemeral(consumerRootPath + GlobalConstant.Symbol.SLASH + host, DateUtil.now());
+
+			log.info("reliableMessage register success,consumerGroup={}",consumerGroup);
 		}
-		log.info("reliableMessageRegister producerGroup={}",producerGroup);
-		log.info("reliableMessageRegister consumerGroup={}",consumerGroup);
 	}
 
 }

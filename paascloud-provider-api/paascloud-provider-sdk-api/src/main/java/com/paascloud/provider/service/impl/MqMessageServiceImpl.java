@@ -131,11 +131,12 @@ public class MqMessageServiceImpl implements MqMessageService {
 	public void confirmReceiveMessage(String cid, MqMessageData messageData) {
 		final String messageKey = messageData.getMessageKey();
 		log.info("confirmReceiveMessage - 消费者={}, 确认收到key={}的消息", cid, messageKey);
-		// 先保存消息
+		// 持久化消费者确认消息 MqMessageData 到本地服务 mysql 中，表 pc_mq_message_data
 		messageData.setMessageType(MqMessageTypeEnum.CONSUMER_MESSAGE.messageType());
 		messageData.setId(UniqueIdGenerator.generateId());
 		mqMessageDataMapper.insertSelective(messageData);
-
+		// 调用远端服务 TPC，更新确认收到消息表状态为已确认，TpcMqConfirm，表 pc_tpc_mq_confirm；
+		//status：状态, 10 - 未确认 ; 20 - 已确认; 30 已消费；consumeCount：消费的次数，加 1；
 		Wrapper wrapper = tpcMqMessageFeignApi.confirmReceiveMessage(cid, messageKey);
 		log.info("tpcMqMessageFeignApi.confirmReceiveMessage result={}", wrapper);
 		if (wrapper == null) {
@@ -164,9 +165,12 @@ public class MqMessageServiceImpl implements MqMessageService {
 		// 分页参数每页5000条
 		int pageSize = 1000;
 		int messageType;
+		// 1. 删除所有生产者发送成功的消息数据
 		if (AliyunMqTopicConstants.MqTagEnum.DELETE_PRODUCER_MESSAGE.getTag().equals(tags)) {
 			messageType = MqMessageTypeEnum.PRODUCER_MESSAGE.messageType();
-		} else {
+		}
+		// 2. 删除所有订阅者消费成功的消息数据
+		else {
 			messageType = MqMessageTypeEnum.CONSUMER_MESSAGE.messageType();
 		}
 
@@ -201,7 +205,7 @@ public class MqMessageServiceImpl implements MqMessageService {
 	@Transactional(rollbackFor = Exception.class)
 	public void saveWaitConfirmMessage(final MqMessageData mqMessageData) {
 		this.saveMqProducerMessage(mqMessageData);
-		// 发送预发送状态的消息给消息中心
+		// 发送预发送状态的消息给消息中心,即可靠消息服务（TCP）
 		TpcMqMessageDto tpcMqMessageDto = mqMessageData.getTpcMqMessageDto();
 		tpcMqMessageFeignApi.saveMessageWaitingConfirm(tpcMqMessageDto);
 		log.info("<== saveWaitConfirmMessage - 存储预发送消息成功. messageKey={}", mqMessageData.getMessageKey());

@@ -111,6 +111,8 @@ public class MqProducerStoreAspect {
 			if (delayLevelEnum != DelayLevelEnum.ZERO) {
 				domain.setDelayLevel(delayLevelEnum.delayLevel());
 			}
+			// 1.1 发送待确认消息到可靠消息系统
+			// 本地服务消息落地，可靠消息服务中心也持久化预发送消息(WAIT_SEND)，但是不发送
 			mqMessageService.saveWaitConfirmMessage(domain);
 		}
 		result = joinPoint.proceed();
@@ -122,6 +124,7 @@ public class MqProducerStoreAspect {
 			mqMessageService.directSendMessage(domain);
 		} else {
 			final MqMessageData finalDomain = domain;
+			// 异步确认发送
 			taskExecutor.execute(() -> mqMessageService.confirmAndSendMessage(finalDomain.getMessageKey()));
 		}
 		return result;

@@ -90,6 +90,7 @@ public class TpcMqMessageServiceImpl extends BaseService<TpcMqMessage> implement
 		}
 
 		TpcMqMessage update = new TpcMqMessage();
+		// 1. 更新可靠消息状态为：SENDING
 		update.setMessageStatus(MqSendStatusEnum.SENDING.sendStatus());
 		update.setId(message.getId());
 		update.setUpdateTime(new Date());

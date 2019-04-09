@@ -33,7 +33,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * The class Redis init runner.
+ * The class MQ init runner.
  *
  * @author paascloud.net @gmail.com
  */

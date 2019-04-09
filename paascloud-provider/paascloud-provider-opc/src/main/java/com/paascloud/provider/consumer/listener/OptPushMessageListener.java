@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The class Opt push message listener.
+ * 消息逻辑处理监听器
  *
  * @author paascloud.net@gmail.com
  */
@@ -71,7 +72,7 @@ public class OptPushMessageListener implements MessageListenerConcurrently {
 		String keys = msg.getKeys();
 		log.info("MQ消费Topic={},tag={},key={}", topicName, tags, keys);
 		ValueOperations<String, String> ops = srt.opsForValue();
-		// 控制幂等性使用的key
+		// redis控制幂等性(避免重复消费)
 		try {
 			MqMessage.checkMessage(body, topicName, tags, keys);
 			String mqKV = null;
@@ -82,6 +83,7 @@ public class OptPushMessageListener implements MessageListenerConcurrently {
 				log.error("MQ消费Topic={},tag={},key={}, 重复消费", topicName, tags, keys);
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
+			// 根据消息的 topic 执行相应的操作处理该消息
 			if (AliyunMqTopicConstants.MqTopicEnum.SEND_SMS_TOPIC.getTopic().equals(topicName)) {
 				optSendSmsTopicService.handlerSendSmsTopic(body, topicName, tags, keys);
 			}
@@ -94,15 +96,19 @@ public class OptPushMessageListener implements MessageListenerConcurrently {
 			if (AliyunMqTopicConstants.MqTopicEnum.MDC_TOPIC.getTopic().equals(topicName)) {
 				mdcTopicConsumer.handlerSendSmsTopic(body, topicName, tags, keys);
 			} else {
-				log.info("OPC订单信息消 topicName={} 不存在", topicName);
+				log.info("OPC订单信息消费 topicName={} 不存在", topicName);
 			}
 		} catch (IllegalArgumentException ex) {
 			log.error("校验MQ message 失败 ex={}", ex.getMessage(), ex);
 		} catch (Exception e) {
 			log.error("处理MQ message 失败 topicName={}, keys={}, ex={}", topicName, keys, e.getMessage(), e);
+			// 如果消息消费失败，例如数据库异常等，扣款失败，发送失败需要重试的场景，
+			// 返回下面代码，RocketMQ就认为消费失败。
 			return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 		}
+		// redis 中存储消费过的该消息的 keys，幂等性（避免重复消费）
 		ops.set(keys, keys, 10, TimeUnit.DAYS);
+		// 业务实现消费回调的时候，当且仅当返回下面代码时，RocketMQ才会认为这批消息是消费完成的
 		return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	}
 }

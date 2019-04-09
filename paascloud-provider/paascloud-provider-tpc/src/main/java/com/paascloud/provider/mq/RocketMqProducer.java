@@ -46,6 +46,12 @@ public class RocketMqProducer {
 		return retrySendMessage(pid, message);
 	}
 
+	/**
+	 * 核心方法：重试发送消息（重试次数3次）
+	 * @param pid
+	 * @param msg
+	 * @return
+	 */
 	private static SendResult retrySendMessage(String pid, Message msg) {
 		int iniCount = 1;
 		SendResult result;
