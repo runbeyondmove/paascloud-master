@@ -33,7 +33,7 @@ public class RedisInitRunner implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) {
-		log.info(">>>>>>>>>>>>>>>服务启动执行，执行加载数据等操作 11111111 <<<<<<<<<<<<<");
+		log.info(">>>>>>>>>>>>>>>服务启动执行，执行加载数据等操作<<<<<<<<<<<<<");
 	}
 
 }

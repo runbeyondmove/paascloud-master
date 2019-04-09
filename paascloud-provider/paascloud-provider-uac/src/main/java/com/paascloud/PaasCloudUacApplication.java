@@ -46,14 +46,17 @@ public class PaasCloudUacApplication {
 		SpringApplication.run(PaasCloudUacApplication.class, args);
 	}
 
+	/**
+	 * 将Liquibase集成到spring框架
+	 *
+	 * @param dataSource
+	 * @return
+	 */
 	@Bean
 	public SpringLiquibase springLiquibase(DataSource dataSource) {
-
 		SpringLiquibase springLiquibase = new SpringLiquibase();
-
 		springLiquibase.setDataSource(dataSource);
 		springLiquibase.setChangeLog("classpath:/liquibase/index.xml");
-
 		return springLiquibase;
 	}
 

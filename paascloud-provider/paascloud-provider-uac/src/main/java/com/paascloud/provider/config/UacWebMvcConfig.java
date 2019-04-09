@@ -54,7 +54,8 @@ public class UacWebMvcConfig extends WebMvcConfigurerAdapter {
 	}
 
 	/**
-	 * 通过实现WebMvcConfigurer接口来HttpMessageConverter，springboot2.0版本以后推荐使用这种方式来进行web配置，这样不会覆盖掉springboot的一些默认配置。
+	 * 通过实现WebMvcConfigurer接口来HttpMessageConverter,
+	 * springboot2.0版本以后推荐使用这种方式来进行web配置，这样不会覆盖掉springboot的一些默认配置。
 	 * @param converters
 	 */
 	@Override

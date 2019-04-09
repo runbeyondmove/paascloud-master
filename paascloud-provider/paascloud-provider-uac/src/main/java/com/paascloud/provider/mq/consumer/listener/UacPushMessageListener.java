@@ -69,7 +69,7 @@ public class UacPushMessageListener implements MessageListenerConcurrently {
 			if (AliyunMqTopicConstants.MqTopicEnum.TPC_TOPIC.getTopic().equals(topicName)) {
 				mqMessageService.deleteMessageTopic(body, tags);
 			} else {
-				log.info("OPC订单信息消 topicName={} 不存在", topicName);
+				log.info("OPC订单信息 topicName={} 不存在", topicName);
 			}
 		} catch (IllegalArgumentException ex) {
 			log.error("校验MQ message 失败 ex={}", ex.getMessage(), ex);

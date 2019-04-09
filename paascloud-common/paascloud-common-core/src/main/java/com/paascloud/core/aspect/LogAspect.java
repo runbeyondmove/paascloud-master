@@ -131,11 +131,14 @@ public class LogAspect {
 			operationLogDto.setLogName(relog.logType().getName());
 
 			getControllerMethodDescription(relog, operationLogDto, result, joinPoint);
-			threadLocal.remove();
+
 			// TODO 保存日志的域名有变
 			taskExecutor.execute(() -> this.restTemplate.postForObject("http://paascloud-provider-uac/auth/saveLog", operationLogDto, Integer.class));
 		} catch (Exception ex) {
 			log.error("获取注解类出现异常={}", ex.getMessage(), ex);
+		} finally {
+			// 避免先get后set的情况导致业务的错误
+			threadLocal.remove();
 		}
 	}
 

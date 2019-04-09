@@ -31,6 +31,7 @@ Zookeeper
 钉钉机器人
 阿里云短信服务
 七牛云文件服务
+LiquiBase
 ...
 ```
 

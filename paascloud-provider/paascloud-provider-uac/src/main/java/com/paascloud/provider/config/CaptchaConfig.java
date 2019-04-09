@@ -20,6 +20,7 @@ import java.util.Properties;
 
 /**
  * The class Captcha config.
+ * 验证码配置
  *
  * @author paascloud.net @gmail.com
  */

@@ -44,7 +44,7 @@ public class AliyunMqConfiguration {
 	private TaskExecutor taskExecutor;
 
 	/**
-	 * Default mq push consumer default mq push consumer.
+	 * Default mq push consumer.
 	 *
 	 * @return the default mq push consumer
 	 *
