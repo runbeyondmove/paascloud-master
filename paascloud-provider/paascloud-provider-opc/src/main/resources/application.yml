@@ -7,5 +7,5 @@ spring:
   application:
     name: @pom.artifactId@
   datasource:
-    username: root
-    password: 123456
+    username: ljr
+    password: ljr

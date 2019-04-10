@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: outside-dev
+    active: dev
   cloud:
     config:
       fail-fast: false
@@ -9,9 +9,9 @@ spring:
         # 是否从配置中心上读取
         enabled: true
       # 指明远程仓库的分支
-      label: ${spring.profiles.active}
+      label: outside-dev
       # 哪个环境的配置文件
-      profile: dev
+      profile: ${spring.profiles.active}
       username: admin
       password: admin
 

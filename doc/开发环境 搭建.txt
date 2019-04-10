@@ -4,23 +4,28 @@
 2. 安装mysql5.7、redis、nginx、rocketMq、zookeeper、rabbitMq
 
 
-
-
 启动流程：
 	1. paascloud-eureka
 	2. 启动zookeeper
 	3. 启动rabbitMQ
 	4. paascloud-discovery
+	    注意参数：basedir: /data/config/paascloud-config-repo（查看是否刷新）
+	    仓库上的配置文件会下载到这个指定的路径下
 	5. paascloud-provider-uac
 		启动rocketMQ
-		启动redis，且设置密码，在配置中心上配置密码，并且注意参数：basedir: /data/config/paascloud-config-repo（查看是否刷新）
+		启动redis，且设置密码，在配置中心上配置密码
+	6. paascloud-gateway
+    7. 剩下微服务无启动数序要求
 		
 		
 帐号和密码：admin 123456
 
 
-
 rabbitMQ 管理台页面
     http://118.89.51.123:15672/
     admin/552438
+
+zookeeper的web监控，启动zkweb
+    java -jar zkWeb-v1.2.1.jar
+    访问地址: http://localhost:8099/#
 

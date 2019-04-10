@@ -9,8 +9,10 @@ spring:
           username: runbeyondmove
           password: move121471022
           search-paths: /*
-          default-label: ${spring.profiles.active}
+          default-label: outside-dev
           basedir: /data/config/paascloud-config-repo
+          # Cannot pull from remote https://xxx.git, the working tree is not clean.
+          force-pull: true
     inetutils:
       ignoredInterfaces:
         - docker0

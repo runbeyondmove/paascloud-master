@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: outside-dev
+    active: dev
   application:
     name: @pom.artifactId@
   rabbitmq:
