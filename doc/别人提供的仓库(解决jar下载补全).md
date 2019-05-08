@@ -59,3 +59,15 @@
     <version>20161215</version>
 </dependency>
 ```
+
+另外一种方式：本地安装
+安装相应的jar包(最好要进入到对应的目录)
+```
+$ mvn install:install-file -DgroupId=com.alipay -DartifactId=alipay-sdk-java -Dversion=20170725114550 -Dpackaging=jar -Dfile=alipay-sdk-java-20170725114550.jar
+
+mvn install:install-file -DgroupId=com.alipay -DartifactId=alipay-trade-sdk -Dversion=20161215 -Dpackaging=jar -Dfile=alipay-trade-sdk-20161215.jar
+ 
+mvn install:install-file -DgroupId=com.liuzm.paascloud -DartifactId=elastic-job-lite-starter -Dversion=1.0 -Dpackaging=jar -Dfile=elastic-job-lite-starter-1.0-SNAPSHOT.jar
+ 
+mvn install:install-file -DgroupId=com.liuzm.mybatis -DartifactId=mybatis-generator -Dversion=1.0 -Dpackaging=jar -Dfile=mybatis-generator-1.0.jar
+```
