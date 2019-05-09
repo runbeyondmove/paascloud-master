@@ -32,7 +32,7 @@ public Wrapper registerUser(UserRegisterDto user) {
 ```
 
 #### service层
-1. 用户ID生成：雪花算法生成分布式唯一 ID
+1. 用户ID生成：`雪花算法生成分布式唯一 ID`
 1. 用户密码加密：`SpringSecurity BCryptPasswordEncoder` 强哈希方法加密，每次加密的结果都不一样。
 
 > bcrypt 可以有效抵御彩虹表暴力破解，其原理就是在加盐的基础上多次 hash，关于密码参考：https://mp.weixin.qq.com/s/DkHlZs1HgZmGC9r7WaEDeQ
@@ -197,6 +197,8 @@ if (type == MqSendTypeEnum.SAVE_AND_SEND) {
 }
 return result;
 ```
+> - 疑问1：为什么是使用线程来远程调用可靠消息服务，如果调用出现异常会怎么样？
+> - 疑问2：这个切面和事务的关系？切面本身也是一个切面
 
 11. 紧接着上面，可靠消息服务中心（TCP）：根据传过来的 `messageKey` 确认并发送之前已经持久化的预发送消息。
 ```java

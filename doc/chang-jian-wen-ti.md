@@ -143,3 +143,13 @@ Caused by: java.lang.IllegalArgumentException: No Spring Session store is config
 			store-type: none
 ```
 
+# zookeeper：The version of ZooKeeper being used doesn't support Container nodes. CreateMode.PERSISTENT will be used instead.
+> 即大量的临时节点被转换成永久节点，没有被删除，最终导致集群变慢  
+> 原因：ZKPaths类中的一段代码  `localCreateMode = CreateMode.valueOf("CONTAINER");`  
+> curator在处理版本兼容时的bug，踩了版本兼容的坑.参考：https://blog.csdn.net/pange1991/article/details/86688977  
+> 
+> 解决方案：
+> 1. zookeeper使用3.5.x版本
+> 2. zookeeper jar包的版本要和zookeeper的服务器版本一致
+
+

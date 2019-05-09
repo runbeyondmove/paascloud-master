@@ -59,14 +59,18 @@
     <!--这个包的版本要和zookeeper的服务器版本一致，不然会可能会抛出如下日志：
 		The version of ZooKeeper being used doesn't support Container nodes. CreateMode.PERSISTENT will be used instead.
 		即大量的临时节点被转换成永久节点，没有被删除，最终导致集群变慢
+		原因：ZKPaths类中的一段代码  localCreateMode = CreateMode.valueOf("CONTAINER");
+		curator在处理版本兼容时的bug，踩了版本兼容的坑.
 		参考：https://blog.csdn.net/pange1991/article/details/86688977
+
+		解决方案：zookeeper使用3.5.x版本
 
 		排除log4j12解决如下错误: SLF4J: Detected both log4j-over-slf4j.jar AND bound slf4j-log4j12.jar on the class path, preempting StackOverflowError.
 		-->
     <dependency>
       <groupId>org.apache.zookeeper</groupId>
       <artifactId>zookeeper</artifactId>
-      <version>3.4.12</version>
+      <version>3.5.4-beta</version>
       <exclusions>
         <exclusion>
           <artifactId>slf4j-log4j12</artifactId>
