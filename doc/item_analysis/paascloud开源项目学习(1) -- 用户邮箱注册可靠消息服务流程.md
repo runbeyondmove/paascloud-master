@@ -117,7 +117,7 @@ public @interface MqProducerStore {
 ```
 
 7. 切面中，因为邮件激活发送消息类型为默认的：`等待确认`。
-- 此处本地服务 `UAC` 消息落地：保存待确认消息 MqMessageData 到 `mysql`，表`pc_mq_message_data`；
+- 此处本地服务 `UAC` 消息落地：保存待确认消息 MqMessageData 到 `mysql`中的本地消息表`pc_mq_message_data`；
 - 发送待确认消息到可靠消息系统（TPC）：发送`预发送状态`的消息给消息中心
 ```java
 // 切面
@@ -136,7 +136,7 @@ if (type == MqSendTypeEnum.WAIT_CONFIRM) {
         domain.setDelayLevel(delayLevelEnum.delayLevel());
     }
     // 1.1 发送待确认消息到可靠消息系统
-    // 本地服务消息落地，可靠消息服务中心也持久化预发送消息，但是不发送
+    // 本地服务消息落地(默认为未发送)，可靠消息服务中心也持久化预发送消息，但是不发送
     mqMessageService.saveWaitConfirmMessage(domain);
 }
 result = joinPoint.proceed();	// 返回注解方法，执行业务
@@ -177,6 +177,12 @@ public void saveMessageWaitingConfirm(TpcMqMessageDto messageDto) {
     tpcMqMessageMapper.insertSelective(message);
 }
 ```
+> 如果调用远程可靠消息服务出错呢（如网络抖动等），远程调用不成功，事务回滚。此时本地消息表上不存在此消息，以及本地任务还未执行。保证了本地任务和MQ发送的最终一致性。
+> 此种情况是没有考虑服务降级的情况，如果要考虑服务降级的情况，要自己实现。  
+> 比如对远程调用的结果做判断
+> 如果调用远程可靠消息服务出错呢（如网络抖动等），会走断路器，调用还是当作成功的，只是远程可靠消息服务没有持久化这个等待确认状态的消息
+> 还是会当作持久化成功，流程还是继续走，直到事务成功。事务成功，此时本地消息表上存在此消息，以及本地任务已经执行。
+> 所以这个uac服务应该提供定期任务，定期扫描本地消息表，重新发送消息给远程可靠消息服务，保证本地任务和MQ发送的最终一致性。
 
 9. 上面执行完后，返回注解 `@MqProducerStore`所在方法，执行本地事务：保存用户到 mysql。
 ```java
@@ -198,7 +204,9 @@ if (type == MqSendTypeEnum.SAVE_AND_SEND) {
 }
 return result;
 ```
-> - 疑问1：为什么是使用线程来远程调用可靠消息服务，如果调用出现异常会怎么样？
+> - 疑问1：为什么是使用线程来远程调用可靠消息服务，如果调用出现异常会怎么样？（请查看文章[微服务架构下的分布式事务解决方案](微服务架构下的分布式事务解决方案.md)）
+> 异步远程调用，出现异常，不会回滚事务，不影响本地事务的执行
+
 > - 疑问2：这个切面和事务的关系？切面本身也是一个切面
 
 11. 紧接着上面，可靠消息服务中心（TCP）：根据传过来的 `messageKey` 确认并发送之前已经持久化的预发送消息。
