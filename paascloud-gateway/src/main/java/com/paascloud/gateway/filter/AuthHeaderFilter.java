@@ -40,14 +40,19 @@ public class AuthHeaderFilter extends ZuulFilter {
 	private static final String LOGOUT_URI = "/oauth/token";
 	private static final String ALIPAY_CALL_URI = "/pay/alipayCallback";
 
-
 	/**
 	 * Filter type string.
+	 *
+	 * pre：可以在请求被路由之前调用
+	 * route：在路由请求时候被调用
+	 * post：在route和error过滤器之后被调用
+	 * error：处理请求时发生错误时被调用
 	 *
 	 * @return the string
 	 */
 	@Override
 	public String filterType() {
+		// 前置过滤器
 		return "pre";
 	}
 
@@ -58,6 +63,7 @@ public class AuthHeaderFilter extends ZuulFilter {
 	 */
 	@Override
 	public int filterOrder() {
+		// 优先级为0，数字越大，优先级越低
 		return 0;
 	}
 

@@ -40,6 +40,10 @@ public class PaasCloudGatewayApplication {
 		SpringApplication.run(PaasCloudGatewayApplication.class, args);
 	}
 
+	/**
+	 * 实现跨域
+	 * @return
+	 */
 	@Bean
 	public CorsFilter corsFilter() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

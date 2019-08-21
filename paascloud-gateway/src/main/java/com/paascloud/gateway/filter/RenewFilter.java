@@ -37,6 +37,8 @@ public class RenewFilter extends ZuulFilter {
 
 	@Resource
 	private JwtTokenStore jwtTokenStore;
+
+	// 单位：秒---即20分钟
 	private static final int EXPIRES_IN = 60 * 20;
 
 	/**
@@ -95,7 +97,7 @@ public class RenewFilter extends ZuulFilter {
 		}
 		OAuth2AccessToken oAuth2AccessToken = jwtTokenStore.readAccessToken(token);
 		int expiresIn = oAuth2AccessToken.getExpiresIn();
-
+		// 有效期小于20分钟，续期
 		if (expiresIn < EXPIRES_IN) {
 			HttpServletResponse servletResponse = requestContext.getResponse();
 			servletResponse.addHeader("Renew-Header", "true");
