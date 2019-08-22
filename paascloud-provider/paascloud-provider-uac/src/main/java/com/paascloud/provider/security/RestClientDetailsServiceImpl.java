@@ -1,5 +1,6 @@
 package com.paascloud.provider.security;
 
+import com.paascloud.core.enums.AuthorizedGrantTypeEnum;
 import com.paascloud.security.core.properties.OAuth2ClientProperties;
 import com.paascloud.security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,8 @@ import javax.annotation.PostConstruct;
 
 /**
  * The class Rest client details service.
+ *
+ * https://www.cnblogs.com/xiaoqi/p/9241712.html
  *
  * @author paascloud.net @gmail.com
  */
@@ -37,7 +40,10 @@ public class RestClientDetailsServiceImpl implements ClientDetailsService {
 			for (OAuth2ClientProperties client : securityProperties.getOauth2().getClients()) {
 				builder.withClient(client.getClientId())
 						.secret(client.getClientSecret())
-						.authorizedGrantTypes("refresh_token", "password", "client_credentials")
+						// 授权模式：可刷新token，密码模式，客户端证书认证模式
+						.authorizedGrantTypes(AuthorizedGrantTypeEnum.REFRESH_TOKEN.getType(),
+								AuthorizedGrantTypeEnum.RESOURCE_OWNER_PASSWORD_CREDENTIALS.getType(),
+								AuthorizedGrantTypeEnum.CLIENT_CREDENTIALS.getType())
 						.accessTokenValiditySeconds(client.getAccessTokenValidateSeconds())
 						.refreshTokenValiditySeconds(client.getRefreshTokenValiditySeconds())
 						.scopes(client.getScope());
