@@ -26,6 +26,10 @@ public class ValidateCodeSecurityConfig extends SecurityConfigurerAdapter<Defaul
 	 */
 	@Override
 	public void configure(HttpSecurity http) {
+		// 在认证流程中加入图像验证码校验：查看Spring Security的源码，可以发现只要把过滤器添加到spring现有的过滤器链上就可以了
+		// 1. 编写验证码过滤器
+		// 2. 放在UsernamePasswordAuthenticationFilter过滤器之前，
+        // 因为Spring Security的过滤器链最前面的是UsernamePasswordAuthenticationFilter
 		http.addFilterBefore(validateCodeFilter, AbstractPreAuthenticatedProcessingFilter.class);
 	}
 

@@ -46,12 +46,19 @@ public class PcAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 
 	private static final String BEARER_TOKEN_TYPE = "Basic ";
 
+	/**
+	 * @param request
+	 * @param response
+	 * @param authentication  封装了所有的认证信息
+	 * @throws IOException
+	 * @throws ServletException
+	 */
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 	                                    Authentication authentication) throws IOException, ServletException {
 
 		logger.info("登录成功");
-
+        // 这个请求与gateway项目中的过滤器相关
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (header == null || !header.startsWith(BEARER_TOKEN_TYPE)) {
 			throw new UnapprovedClientAuthenticationException("请求头中无client信息");
@@ -81,9 +88,14 @@ public class PcAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 
 		log.info("用户【 {} 】记录登录日志", principal.getUsername());
 
+		// 认证成功,把token写出
 		response.setContentType("application/json;charset=UTF-8");
 		response.getWriter().write((objectMapper.writeValueAsString(WrapMapper.ok(token))));
 
+		// 把本类实现父类改成 AuthenticationSuccessHandler 的子类 SavedRequestAwareAuthenticationSuccessHandler
+		// 之前说spring默认成功是跳转到登录前的url地址
+		// 就是使用的这个类来处理的
+		//super.onAuthenticationSuccess(request, response, authentication);
 	}
 
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author paascloud.net @gmail.com
  */
 @Component
-@Order(Integer.MIN_VALUE)  // 注意顺序
+@Order(Integer.MIN_VALUE)  // 注意顺序,优先级
 public class PcAuthorizeConfigProvider implements AuthorizeConfigProvider {
 
 	/**

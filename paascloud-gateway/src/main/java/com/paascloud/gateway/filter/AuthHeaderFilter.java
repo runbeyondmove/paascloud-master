@@ -99,7 +99,8 @@ public class AuthHeaderFilter extends ZuulFilter {
 		HttpServletRequest request = requestContext.getRequest();
 		String requestURI = request.getRequestURI();
 
-		if (OPTIONS.equalsIgnoreCase(request.getMethod()) || !requestURI.contains(AUTH_PATH) || !requestURI.contains(LOGOUT_URI) || !requestURI.contains(ALIPAY_CALL_URI)) {
+		if (OPTIONS.equalsIgnoreCase(request.getMethod()) || !requestURI.contains(AUTH_PATH)
+            || !requestURI.contains(LOGOUT_URI) || !requestURI.contains(ALIPAY_CALL_URI)) {
 			return;
 		}
 		String authHeader = RequestUtil.getAuthHeader(request);

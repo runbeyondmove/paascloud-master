@@ -19,6 +19,8 @@ import java.util.Map;
 /**
  * 校验码处理器管理器
  *
+ * 含有所有的验证码处理器
+ *
  * @author paascloud.net @gmail.com
  */
 @Component
@@ -55,6 +57,7 @@ public class ValidateCodeProcessorHolder {
 	 * @return validate code processor
 	 */
 	ValidateCodeProcessor findValidateCodeProcessor(String type) {
+	    // imageValidateCodeProcessor
 		String name = type.toLowerCase() + ValidateCodeProcessor.class.getSimpleName();
 		ValidateCodeProcessor processor = validateCodeProcessors.get(name);
 		if (processor == null) {

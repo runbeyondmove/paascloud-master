@@ -23,6 +23,12 @@ import java.util.Set;
 
 /**
  * 校验验证码的过滤器
+ * OncePerRequestFilter spring提供的，保证在一个请求中只会被调用一次
+ *
+ * Spring为bean提供了两种初始化bean的方式
+ *      1. 实现InitializingBean接口，实现afterPropertiesSet方法
+ *      2. 在配置文件中通过init-method指定
+ *      3. 两种方式可以同时使用，同时使用的调用顺序：afterPropertiesSet方法 --- init-method方法
  *
  * @author paascloud.net @gmail.com
  */
@@ -50,6 +56,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 	private Map<String, ValidateCodeType> urlMap = new HashMap<>();
 	/**
 	 * 验证请求url与配置的url是否匹配的工具类
+	 * org.springframework.util.AntPathMatcher 能匹配spring中的url模式
 	 */
 	private AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -58,6 +65,8 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 	/**
 	 * 初始化要拦截的url配置信息
 	 *
+	 * org.springframework.beans.factory.InitializingBean 保证在其他属性都设置完成后，由beanFactory调用
+	 * 但是在这里目前还是需要初始化处调用该方法
 	 * @throws ServletException the servlet exception
 	 */
 	@Override
@@ -65,15 +74,17 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 		super.afterPropertiesSet();
 
 		urlMap.put(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM, ValidateCodeType.IMAGE);
+		// 外部定义的需要校验验证码的url
 		addUrlToMap(securityProperties.getCode().getImage().getUrl(), ValidateCodeType.IMAGE);
 
 		urlMap.put(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_MOBILE, ValidateCodeType.SMS);
 		addUrlToMap(securityProperties.getCode().getSms().getUrl(), ValidateCodeType.SMS);
+
 		addUrlToMap(securityProperties.getCode().getEmail().getUrl(), ValidateCodeType.EMAIL);
 	}
 
 	/**
-	 * 讲系统中配置的需要校验验证码的URL根据校验的类型放入map
+	 * 将系统中配置的需要校验验证码的URL根据校验的类型放入map
 	 *
 	 * @param urlString the url string
 	 * @param type      the type

@@ -21,7 +21,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import java.util.Map;
 
 /**
- * 抽象的图片验证码处理器
+ * 抽象的验证码处理器
  *
  * @param <C> the type parameter @author paascloud.net@gmail.com
  *

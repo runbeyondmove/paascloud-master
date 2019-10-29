@@ -19,6 +19,7 @@ public class PcAuthorizeConfigManager implements AuthorizeConfigManager {
 
 	/**
 	 * Instantiates a new Pc authorize config manager.
+     * spring启动时自动注入（构造函数注入方式），收集系统中所有的AuthorizeConfigProvider
 	 *
 	 * @param authorizeConfigProviders the authorize config providers
 	 */
